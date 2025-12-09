@@ -1,0 +1,600 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Location Performance Reminder - Time Square Mall</title>
+        <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            
+            body { 
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                background: #f5f5f5;
+                padding: 20px 10px;
+                line-height: 1.6;
+                color: #333333;
+            }
+            
+            .email-wrapper {
+                max-width: 1000px;
+                margin: 0 auto;
+                background: #ffffff;
+                border-radius: 4px;
+                overflow: hidden;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+            
+            .header {
+                background: #4a5568;
+                padding: 25px 20px;
+                text-align: center;
+                color: #ffffff;
+                border-bottom: 3px solid #2d3748;
+            }
+            
+            .header h1 {
+                font-size: 22px;
+                font-weight: 600;
+                margin-bottom: 6px;
+            }
+            
+            .header-subtitle {
+                font-size: 15px;
+                opacity: 0.95;
+                margin-bottom: 4px;
+                font-weight: 500;
+            }
+            
+            .header-date {
+                font-size: 12px;
+                opacity: 0.85;
+            }
+            
+            .alert-banner {
+                background: #fff3cd;
+                color: #856404;
+                padding: 12px 20px;
+                text-align: center;
+                font-weight: 500;
+                font-size: 13px;
+                border-bottom: 1px solid #ffeeba;
+            }
+            
+            .content {
+                padding: 25px;
+            }
+            
+            .section-title {
+                font-size: 16px;
+                font-weight: 600;
+                color: #2d3748;
+                margin: 25px 0 12px 0;
+                padding-bottom: 6px;
+                border-bottom: 1px solid #e2e8f0;
+            }
+            
+            .section-title:first-child {
+                margin-top: 0;
+            }
+            
+            .info-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 12px;
+                margin-bottom: 20px;
+            }
+            
+            .info-item {
+                background: #f8f9fa;
+                border: 1px solid #dee2e6;
+                padding: 12px 15px;
+                border-radius: 4px;
+            }
+            
+            .info-label {
+                font-size: 11px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                color: #6c757d;
+                margin-bottom: 6px;
+            }
+            
+            .info-value {
+                font-size: 15px;
+                font-weight: 500;
+                color: #2d3748;
+            }
+            
+            .info-value a {
+                color: #0066cc;
+                text-decoration: none;
+            }
+            
+            .info-value a:hover {
+                text-decoration: underline;
+            }
+            
+            .top-summary-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 15px 0;
+                font-size: 13px;
+                border: 1px solid #dee2e6;
+            }
+            
+            .top-summary-table td {
+                padding: 10px 12px;
+                border: 1px solid #dee2e6;
+            }
+            
+            .top-summary-table td:first-child {
+                background: #f8f9fa;
+                font-weight: 600;
+                color: #495057;
+                width: 200px;
+            }
+            
+            .report-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 15px;
+                font-size: 13px;
+                border: 1px solid #dee2e6;
+            }
+            
+            .report-table thead {
+                background: #e9ecef;
+            }
+            
+            .report-table th {
+                padding: 10px 12px;
+                text-align: center;
+                font-size: 12px;
+                font-weight: 600;
+                color: #495057;
+                border: 1px solid #dee2e6;
+            }
+            
+            .report-table tbody tr {
+                border-bottom: 1px solid #dee2e6;
+            }
+            
+            .report-table tbody tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+            
+            .report-table tbody tr.total-row {
+                background-color: #e9ecef;
+                font-weight: 700;
+            }
+            
+            .report-table td {
+                padding: 8px 12px;
+                vertical-align: middle;
+                color: #333333;
+                border: 1px solid #dee2e6;
+            }
+            
+            .text-center {
+                text-align: center;
+            }
+            
+            .chart-container {
+                background: #ffffff;
+                border: 1px solid #dee2e6;
+                padding: 15px;
+                margin: 15px 0;
+                text-align: center;
+            }
+            
+            .chart-container img {
+                max-width: 100%;
+                height: auto;
+            }
+            
+            .info-box {
+                background: #e7f3ff;
+                border-left: 3px solid #0066cc;
+                padding: 12px 15px;
+                margin: 15px 0;
+            }
+            
+            .info-box-title {
+                font-weight: 600;
+                font-size: 13px;
+                color: #0066cc;
+                margin-bottom: 6px;
+            }
+            
+            .info-box-content {
+                font-size: 13px;
+                color: #333333;
+                line-height: 1.6;
+            }
+            
+            .footer {
+                background: #2d3748;
+                color: #a0aec0;
+                text-align: center;
+                padding: 20px;
+                font-size: 12px;
+            }
+            
+            .footer p {
+                margin: 0;
+            }
+            
+            @media only screen and (max-width: 600px) {
+                body {
+                    padding: 10px 5px;
+                }
+                
+                .header {
+                    padding: 20px 15px;
+                }
+                
+                .header h1 {
+                    font-size: 18px;
+                }
+                
+                .content {
+                    padding: 15px;
+                }
+                
+                .info-grid {
+                    grid-template-columns: 1fr;
+                    gap: 10px;
+                }
+                
+                .section-title {
+                    font-size: 14px;
+                    margin: 20px 0 10px 0;
+                }
+                
+                .report-table {
+                    font-size: 11px;
+                }
+                
+                .report-table th,
+                .report-table td {
+                    padding: 6px 4px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="email-wrapper">
+            <div class="header">
+                <h1>📍 Location Document Expiry Reminder</h1>
+                <div class="header-subtitle">Time Square Mall</div>
+                <div class="header-date">December 4, 2025</div>
+            </div>
+            
+            <div class="alert-banner">
+                ⚠️ REMINDER: Please review the performance metrics and cost breakdown below for further details
+            </div>
+            
+            <div class="content">
+                <h2 class="section-title">Location Information</h2>
+                
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Location Name</div>
+                        <div class="info-value">Time Square Mall</div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-label">Type</div>
+                        <div class="info-value">Kiosk </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-label">Opening Date</div>
+                        <div class="info-value">12/18/2023</div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-label">Lease Expiry</div>
+                        <div class="info-value">2/15/2026</div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-label">Notice Period</div>
+                        <div class="info-value">90 days</div>
+                    </div>
+                    
+                    
+                    <div class="info-item">
+                        <div class="info-label">Lease Agreement</div>
+                        <div class="info-value"><a href="https://drive.google.com/file/d/1joIjoJnA8vyisVcDJoxiLg9AqM7vF0g9/view?usp=sharing" target="_blank">📄 View Document</a></div>
+                    </div>
+                    
+                </div>
+                
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Cost (Last 6 Months)</div>
+                        <div class="info-value">AED 298,291</div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-label">Sales (Last 6 Months)</div>
+                        <div class="info-value">71.00</div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-label">Customer Acquisition Cost (CAC)</div>
+                        <div class="info-value">AED 4,201</div>
+                    </div>
+                </div>
+                
+                
+                <h2 class="section-title">Cost Summary</h2>
+                
+                <table class="top-summary-table">
+                    <tr>
+                        <td>Construction Cost</td>
+                        <td>AED 25,000</td>
+                    </tr>
+                    <tr>
+                        <td>Last Period Rent Cost</td>
+                        <td>AED 88,200</td>
+                    </tr>
+                    <tr>
+                        <td>Renewal Rent Cost</td>
+                        <td>AED 88,200</td>
+                    </tr>
+                </table>
+                
+                
+                
+                <h2 class="section-title">Monthly Performance Breakdown</h2>
+                
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>Month</th>
+                            <th>Attributed Sales</th>
+                            <th>Running att. CAC</th>
+                            <th>Amortised att. CAC</th>
+                            <th>Real att. CAC</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        <tr class="">
+          <td class="text-center"><strong>Nov-24</strong></td>
+          <td class="text-center">2.68</td>
+          <td class="text-center">AED 9,257</td>
+          <td class="text-center">AED 9,414</td>
+          <td class="text-center">AED 9,701</td>
+        </tr>
+        <tr class="">
+          <td class="text-center"><strong>Dec-24</strong></td>
+          <td class="text-center">4.88</td>
+          <td class="text-center">AED 5,463</td>
+          <td class="text-center">AED 5,549</td>
+          <td class="text-center">AED 5,707</td>
+        </tr>
+        <tr class="">
+          <td class="text-center"><strong>Jan-25</strong></td>
+          <td class="text-center">4.56</td>
+          <td class="text-center">AED 5,965</td>
+          <td class="text-center">AED 6,057</td>
+          <td class="text-center">AED 6,226</td>
+        </tr>
+        <tr class="">
+          <td class="text-center"><strong>Feb-25</strong></td>
+          <td class="text-center">3.72</td>
+          <td class="text-center">AED 6,523</td>
+          <td class="text-center">AED 6,636</td>
+          <td class="text-center">AED 6,843</td>
+        </tr>
+        <tr class="">
+          <td class="text-center"><strong>Mar-25</strong></td>
+          <td class="text-center">3.96</td>
+          <td class="text-center">AED 6,783</td>
+          <td class="text-center">AED 6,889</td>
+          <td class="text-center">AED 7,084</td>
+        </tr>
+        <tr class="">
+          <td class="text-center"><strong>Apr-25</strong></td>
+          <td class="text-center">3.25</td>
+          <td class="text-center">AED 7,657</td>
+          <td class="text-center">AED 7,786</td>
+          <td class="text-center">AED 8,023</td>
+        </tr>
+        <tr class="">
+          <td class="text-center"><strong>May-25</strong></td>
+          <td class="text-center">2.40</td>
+          <td class="text-center">AED 10,303</td>
+          <td class="text-center">AED 10,478</td>
+          <td class="text-center">AED 10,798</td>
+        </tr>
+        <tr class="">
+          <td class="text-center"><strong>Jun-25</strong></td>
+          <td class="text-center">1.20</td>
+          <td class="text-center">AED 27,181</td>
+          <td class="text-center">AED 27,532</td>
+          <td class="text-center">AED 28,173</td>
+        </tr>
+        <tr class="">
+          <td class="text-center"><strong>Jul-25</strong></td>
+          <td class="text-center">4.06</td>
+          <td class="text-center">AED 5,292</td>
+          <td class="text-center">AED 5,396</td>
+          <td class="text-center">AED 5,585</td>
+        </tr>
+        <tr class="">
+          <td class="text-center"><strong>Aug-25</strong></td>
+          <td class="text-center">4.56</td>
+          <td class="text-center">AED 3,726</td>
+          <td class="text-center">AED 3,819</td>
+          <td class="text-center">AED 3,987</td>
+        </tr>
+        <tr class="">
+          <td class="text-center"><strong>Sep-25</strong></td>
+          <td class="text-center">5.70</td>
+          <td class="text-center">AED 2,782</td>
+          <td class="text-center">AED 2,856</td>
+          <td class="text-center">AED 2,991</td>
+        </tr>
+        <tr class="">
+          <td class="text-center"><strong>Oct-25</strong></td>
+          <td class="text-center">4.14</td>
+          <td class="text-center">AED 4,180</td>
+          <td class="text-center">AED 4,281</td>
+          <td class="text-center">AED 4,467</td>
+        </tr>
+        <tr class="total-row">
+          <td class="text-center"><strong>Total</strong></td>
+          <td class="text-center">45.11</td>
+          <td class="text-center">AED 6,288</td>
+          <td class="text-center">AED 6,400</td>
+          <td class="text-center">AED 6,605</td>
+        </tr></tbody>
+                </table>
+                
+                
+                
+                <h2 class="section-title">Cost Breakdown Details</h2>
+                
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>Month</th>
+                            <th>Construction Cost<br>(Amortised)</th>
+                            <th>Construction Cost<br>(Real)</th>
+                            <th>Rent Cost</th>
+                            <th>Salary Costs</th>
+                            <th>Other costs</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        <tr class="">
+          <td class="text-center"><strong>Nov-24</strong></td>
+          <td class="text-center">AED 417</td>
+          <td class="text-center">AED 1,190</td>
+          <td class="text-center">AED 6,666</td>
+          <td class="text-center">AED 18,144</td>
+          <td class="text-center"></td>
+        </tr>
+        <tr class="">
+          <td class="text-center"><strong>Dec-24</strong></td>
+          <td class="text-center">AED 417</td>
+          <td class="text-center">AED 1,190</td>
+          <td class="text-center">AED 6,666</td>
+          <td class="text-center">AED 19,992</td>
+          <td class="text-center"></td>
+        </tr>
+        <tr class="">
+          <td class="text-center"><strong>Jan-25</strong></td>
+          <td class="text-center">AED 417</td>
+          <td class="text-center">AED 1,190</td>
+          <td class="text-center">AED 6,666</td>
+          <td class="text-center">AED 20,533</td>
+          <td class="text-center"></td>
+        </tr>
+        <tr class="">
+          <td class="text-center"><strong>Feb-25</strong></td>
+          <td class="text-center">AED 417</td>
+          <td class="text-center">AED 1,190</td>
+          <td class="text-center">AED 6,666</td>
+          <td class="text-center">AED 17,600</td>
+          <td class="text-center"></td>
+        </tr>
+        <tr class="">
+          <td class="text-center"><strong>Mar-25</strong></td>
+          <td class="text-center">AED 417</td>
+          <td class="text-center">AED 1,190</td>
+          <td class="text-center">AED 6,666</td>
+          <td class="text-center">AED 20,195</td>
+          <td class="text-center"></td>
+        </tr>
+        <tr class="">
+          <td class="text-center"><strong>Apr-25</strong></td>
+          <td class="text-center">AED 417</td>
+          <td class="text-center">AED 1,190</td>
+          <td class="text-center">AED 6,666</td>
+          <td class="text-center">AED 18,218</td>
+          <td class="text-center"></td>
+        </tr>
+        <tr class="">
+          <td class="text-center"><strong>May-25</strong></td>
+          <td class="text-center">AED 417</td>
+          <td class="text-center">AED 1,190</td>
+          <td class="text-center">AED 6,833</td>
+          <td class="text-center">AED 17,893</td>
+          <td class="text-center"></td>
+        </tr>
+        <tr class="">
+          <td class="text-center"><strong>Jun-25</strong></td>
+          <td class="text-center">AED 417</td>
+          <td class="text-center">AED 1,190</td>
+          <td class="text-center">AED 7,000</td>
+          <td class="text-center">AED 25,617</td>
+          <td class="text-center"></td>
+        </tr>
+        <tr class="">
+          <td class="text-center"><strong>Jul-25</strong></td>
+          <td class="text-center">AED 417</td>
+          <td class="text-center">AED 1,190</td>
+          <td class="text-center">AED 7,350</td>
+          <td class="text-center">AED 12,737</td>
+          <td class="text-center">AED 1,400</td>
+        </tr>
+        <tr class="">
+          <td class="text-center"><strong>Aug-25</strong></td>
+          <td class="text-center">AED 417</td>
+          <td class="text-center">AED 1,190</td>
+          <td class="text-center">AED 7,350</td>
+          <td class="text-center">AED 8,857</td>
+          <td class="text-center">AED 785</td>
+        </tr>
+        <tr class="">
+          <td class="text-center"><strong>Sep-25</strong></td>
+          <td class="text-center">AED 417</td>
+          <td class="text-center">AED 1,190</td>
+          <td class="text-center">AED 7,350</td>
+          <td class="text-center">AED 7,930</td>
+          <td class="text-center">AED 577</td>
+        </tr>
+        <tr class="">
+          <td class="text-center"><strong>Oct-25</strong></td>
+          <td class="text-center">AED 417</td>
+          <td class="text-center">AED 1,190</td>
+          <td class="text-center">AED 7,350</td>
+          <td class="text-center">AED 9,256</td>
+          <td class="text-center">AED 698</td>
+        </tr>
+        <tr class="total-row">
+          <td class="text-center"><strong>Total</strong></td>
+          <td class="text-center"></td>
+          <td class="text-center"></td>
+          <td class="text-center"></td>
+          <td class="text-center"></td>
+          <td class="text-center"></td>
+        </tr></tbody>
+                </table>
+                
+                
+                
+                <h2 class="section-title">📈 CAC Trend Analysis</h2>
+                <div class="chart-container">
+                    <img src="https://quickchart.io/chart?v=2&c=%7B%22type%22%3A%22line%22%2C%22data%22%3A%7B%22labels%22%3A%5B%22Nov-24%22%2C%22Dec-24%22%2C%22Jan-25%22%2C%22Feb-25%22%2C%22Mar-25%22%2C%22Apr-25%22%2C%22May-25%22%2C%22Jun-25%22%2C%22Jul-25%22%2C%22Aug-25%22%2C%22Sep-25%22%2C%22Oct-25%22%5D%2C%22datasets%22%3A%5B%7B%22label%22%3A%22Real%20att.%20CAC%22%2C%22data%22%3A%5B9701%2C5707%2C6226%2C6843%2C7084%2C8023%2C10798%2C28173%2C5585%2C3987%2C2991%2C4467%5D%2C%22borderColor%22%3A%22rgb(75%2C%20192%2C%20192)%22%2C%22backgroundColor%22%3A%22rgba(75%2C%20192%2C%20192%2C%200.1)%22%2C%22fill%22%3Atrue%2C%22tension%22%3A0.3%2C%22pointRadius%22%3A4%2C%22pointHoverRadius%22%3A6%2C%22datalabels%22%3A%7B%22display%22%3Afalse%7D%7D%2C%7B%22label%22%3A%22Amortised%20att.%20CAC%22%2C%22data%22%3A%5B9414%2C5549%2C6057%2C6636%2C6889%2C7786%2C10478%2C27532%2C5396%2C3819%2C2856%2C4281%5D%2C%22borderColor%22%3A%22rgb(54%2C%20162%2C%20235)%22%2C%22backgroundColor%22%3A%22rgba(54%2C%20162%2C%20235%2C%200.1)%22%2C%22fill%22%3Atrue%2C%22tension%22%3A0.3%2C%22pointRadius%22%3A4%2C%22pointHoverRadius%22%3A6%2C%22datalabels%22%3A%7B%22display%22%3Afalse%7D%7D%2C%7B%22label%22%3A%22Running%20att.%20CAC%22%2C%22data%22%3A%5B9257%2C5463%2C5965%2C6523%2C6783%2C7657%2C10303%2C27181%2C5292%2C3726%2C2782%2C4180%5D%2C%22borderColor%22%3A%22rgb(153%2C%20102%2C%20255)%22%2C%22backgroundColor%22%3A%22rgba(153%2C%20102%2C%20255%2C%200.1)%22%2C%22fill%22%3Atrue%2C%22tension%22%3A0.3%2C%22pointRadius%22%3A4%2C%22pointHoverRadius%22%3A6%2C%22datalabels%22%3A%7B%22display%22%3Afalse%7D%7D%5D%7D%2C%22options%22%3A%7B%22plugins%22%3A%7B%22datalabels%22%3A%7B%22display%22%3Afalse%7D%2C%22title%22%3A%7B%22display%22%3Atrue%2C%22text%22%3A%22CAC%20Trend%20Over%20Time%22%2C%22font%22%3A%7B%22size%22%3A16%2C%22weight%22%3A%22bold%22%7D%7D%2C%22legend%22%3A%7B%22display%22%3Atrue%2C%22position%22%3A%22bottom%22%7D%7D%2C%22scales%22%3A%7B%22yAxes%22%3A%5B%7B%22ticks%22%3A%7B%22beginAtZero%22%3Atrue%7D%7D%5D%2C%22xAxes%22%3A%5B%7B%22ticks%22%3A%7B%22fontSize%22%3A9%2C%22maxRotation%22%3A45%2C%22minRotation%22%3A45%7D%7D%5D%7D%7D%7D&width=700&height=400&backgroundColor=white" alt="Monthly CAC Trend">
+                </div>
+                
+                
+                
+                <h2 class="section-title">💵 Monthly Cost Breakdown</h2>
+                <div class="chart-container">
+                    <img src="https://quickchart.io/chart?v=2&c=%7B%22type%22%3A%22line%22%2C%22data%22%3A%7B%22labels%22%3A%5B%22Nov-24%22%2C%22Dec-24%22%2C%22Jan-25%22%2C%22Feb-25%22%2C%22Mar-25%22%2C%22Apr-25%22%2C%22May-25%22%2C%22Jun-25%22%2C%22Jul-25%22%2C%22Aug-25%22%2C%22Sep-25%22%2C%22Oct-25%22%5D%2C%22datasets%22%3A%5B%7B%22label%22%3A%22Rent%20Cost%22%2C%22data%22%3A%5B6666%2C6666%2C6666%2C6666%2C6666%2C6666%2C6833%2C7000%2C7350%2C7350%2C7350%2C7350%5D%2C%22borderColor%22%3A%22rgb(54%2C%20162%2C%20235)%22%2C%22backgroundColor%22%3A%22rgba(54%2C%20162%2C%20235%2C%200.1)%22%2C%22fill%22%3Atrue%2C%22tension%22%3A0.3%2C%22pointRadius%22%3A4%2C%22pointHoverRadius%22%3A6%2C%22datalabels%22%3A%7B%22display%22%3Afalse%7D%7D%2C%7B%22label%22%3A%22Salary%20Costs%22%2C%22data%22%3A%5B18144%2C19992%2C20533%2C17600%2C20195%2C18218%2C17893%2C25617%2C12737%2C8857%2C7930%2C9256%5D%2C%22borderColor%22%3A%22rgb(75%2C%20192%2C%20192)%22%2C%22backgroundColor%22%3A%22rgba(75%2C%20192%2C%20192%2C%200.1)%22%2C%22fill%22%3Atrue%2C%22tension%22%3A0.3%2C%22pointRadius%22%3A4%2C%22pointHoverRadius%22%3A6%2C%22datalabels%22%3A%7B%22display%22%3Afalse%7D%7D%2C%7B%22label%22%3A%22Construction%20Cost%20(Real)%22%2C%22data%22%3A%5B1190%2C1190%2C1190%2C1190%2C1190%2C1190%2C1190%2C1190%2C1190%2C1190%2C1190%2C1190%5D%2C%22borderColor%22%3A%22rgb(153%2C%20102%2C%20255)%22%2C%22backgroundColor%22%3A%22rgba(153%2C%20102%2C%20255%2C%200.1)%22%2C%22fill%22%3Atrue%2C%22tension%22%3A0.3%2C%22pointRadius%22%3A4%2C%22pointHoverRadius%22%3A6%2C%22datalabels%22%3A%7B%22display%22%3Afalse%7D%7D%2C%7B%22label%22%3A%22Other%20Costs%22%2C%22data%22%3A%5B0%2C0%2C0%2C0%2C0%2C0%2C0%2C0%2C1400%2C785%2C577%2C698%5D%2C%22borderColor%22%3A%22rgb(255%2C%20159%2C%2064)%22%2C%22backgroundColor%22%3A%22rgba(255%2C%20159%2C%2064%2C%200.1)%22%2C%22fill%22%3Atrue%2C%22tension%22%3A0.3%2C%22pointRadius%22%3A4%2C%22pointHoverRadius%22%3A6%2C%22datalabels%22%3A%7B%22display%22%3Afalse%7D%7D%5D%7D%2C%22options%22%3A%7B%22plugins%22%3A%7B%22datalabels%22%3A%7B%22display%22%3Afalse%7D%2C%22title%22%3A%7B%22display%22%3Atrue%2C%22text%22%3A%22Monthly%20Cost%20Breakdown%22%2C%22font%22%3A%7B%22size%22%3A16%2C%22weight%22%3A%22bold%22%7D%7D%2C%22legend%22%3A%7B%22display%22%3Atrue%2C%22position%22%3A%22bottom%22%7D%7D%2C%22scales%22%3A%7B%22yAxes%22%3A%5B%7B%22ticks%22%3A%7B%22beginAtZero%22%3Atrue%7D%7D%5D%2C%22xAxes%22%3A%5B%7B%22ticks%22%3A%7B%22fontSize%22%3A9%2C%22maxRotation%22%3A45%2C%22minRotation%22%3A45%7D%7D%5D%7D%7D%7D&width=700&height=400&backgroundColor=white" alt="Cost Breakdown Chart">
+                </div>
+                
+            
+            <div class="footer">
+                <p>🤖 This report was automatically generated by the system</p>
+            </div>
+        </div>
+    </body>
+    </html>
